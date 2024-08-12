@@ -11,7 +11,7 @@
             </div>
           </div>
           <div class="row row-grid mt-5">
-            <div v-for="(post, index) in post" :key="post.id" class="col-lg-4">
+            <div v-for="(post) in post" :key="post.id" class="col-lg-4">
               <icon name="ni ni-settings" size="lg" gradient="white" shadow round color="primary"></icon>
               <h5 class="text-Gray mt-3">{{ post.title }}</h5>
               <p class="text-Black mt-3">{{ truncateContent(post.content) }}</p>
