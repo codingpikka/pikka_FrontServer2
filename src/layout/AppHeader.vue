@@ -43,7 +43,7 @@
 
             <a href="http://localhost:5173/" title="admin" class="admin-link">
               <div class="admin-image">
-                <img src="https://image.fmkorea.com/files/attach/new/20200708/486616/2833571032/2979847802/2143cf95b9a0ffdd7f0ee7ac24930063.jpg" alt="Admin" />
+                <img src="https://file3.instiz.net/data/file3/2018/01/30/f/3/d/f3d91b8cf1edacdd999bb2fb9fbe166c.jpg" alt="Admin" />
               </div>
             </a>
           </div>

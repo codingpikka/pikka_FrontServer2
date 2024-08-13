@@ -2,7 +2,7 @@
 <template>
     <div>
 
-    <PostBanner></PostBanner>
+    
     <PostContent></PostContent>
     <router-view></router-view>
 
@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import PostBanner from './components/post/PostBanner.vue';
 import PostContent from './components/post/PostContent.vue';
 
 
@@ -20,7 +19,6 @@ import PostContent from './components/post/PostContent.vue';
 export default {
   name: "jobPage",
   components: {
-    PostBanner,
     PostContent
   }
 };
