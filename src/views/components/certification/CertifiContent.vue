@@ -7,27 +7,38 @@
             <badge pill type="primary" class="my-4">New Topic</badge>
             <h2 class="display-3 text-gray mb-4">자격증 게시판</h2>
             <p class="lead text-gray">
-              최신 자격증 정보를 한눈에 확인하세요. 다양한 분야의 자격증 정보를 제공하여
-              여러분의 커리어 발전을 돕습니다. 관심 있는 자격증을 찾아 전문성을 키워보세요!
+              새로 올라온 취업 정보를 보여줍니다. 여기에서 다양한 회사의 채용 정보를 확인할 수 있습니다.
+              최신 취업 트렌드와 기회를 놓치지 마세요!
             </p>
           </div>
         </div>
         
+        <div class="row justify-content-center mt-4 mb-5">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="검색어를 입력하세요" v-model="searchQuery" @input="handleSearch">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="handleSearch">검색</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div class="row row-grid mt-5">
-          <div class="col-lg-3 col-md-6 mb-4" v-for="cert in paginatedCertifications" :key="cert.certId">
+          <div class="col-lg-3 col-md-6 mb-4" v-for="job in paginatedJobs" :key="job.jobId">
             <div class="card shadow border-0 h-100">
               <div class="card-body d-flex flex-column">
                 <div class="icon icon-shape icon-shape-primary rounded-circle mb-4">
-                  <icon name="ni ni-paper-diploma" size="lg" gradient="white" shadow round color="primary"></icon>
+                  <icon name="ni ni-briefcase-24" size="lg" gradient="white" shadow round color="primary"></icon>
                 </div>
-                <h5 class="text-primary font-weight-bold mb-3">{{ cert.certName }}</h5>
+                <h5 class="text-primary font-weight-bold mb-3">{{ job.jobInfoTitle }}</h5>
                 <div class="text-gray flex-grow-1">
-                  <p class="mb-0"><strong>분야:</strong> {{ cert.certField }}</p>
-                  <p class="mb-0"><strong>주관:</strong> {{ cert.certOrganization }}</p>
-                  <p class="mb-0"><strong>등급:</strong> {{ cert.certLevel || '해당 없음' }}</p>
-                  <p class="mb-0"><strong>접수기간:</strong> {{ formatDate(cert.certApplyStart) }} - {{ formatDate(cert.certApplyEnd) }}</p>
+                  <p class="mb-0"><strong>회사:</strong> {{ job.jobCompanyName }}</p>
+                  <p class="mb-0"><strong>위치:</strong> {{ job.jobLocation }}</p>
+                  <p class="mb-0"><strong>급여 유형:</strong> {{ job.jobWageType }}</p>
+                  <p class="mb-0"><strong>급여:</strong> {{ formatSalary(job.jobSalary) }}</p>
                 </div>
-                <a :href="cert.certInfoUrl" target="_blank" class="btn btn-primary btn-sm mt-3">상세 정보</a>
+                <a :href="job.jobWebInfoUrl" target="_blank" class="btn btn-primary btn-sm mt-3">상세 정보</a>
               </div>
             </div>
           </div>
@@ -59,32 +70,34 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      certifications: [],
+      jobs: [],
+      filteredJobs: [],
       currentPage: 1,
-      itemsPerPage: 16
+      itemsPerPage: 16,
+      searchQuery: ''
     };
   },
   computed: {
-    paginatedCertifications() {
+    paginatedJobs() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.certifications.slice(start, end);
+      return this.filteredJobs.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.certifications.length / this.itemsPerPage);
+      return Math.ceil(this.filteredJobs.length / this.itemsPerPage);
     }
-  },  
+  },
   mounted() {
-    this.fetchCertifications();
+    this.fetchJobs();
   },
   methods: {
-    async fetchCertifications() {
+    async fetchJobs() {
       try {
         const response = await axios.get('http://localhost:8083/api/jobs');
-        // api 들어오는곳 수정 certification 데이터 값 확인을 위해 jobs로 연결해둠
-        this.certifications = response.data;
+        this.jobs = response.data;
+        this.filteredJobs = [...this.jobs];
       } catch (error) {
-        console.error('Error fetching certification data:', error);
+        console.error('Error fetching job data:', error);
       }
     },
     changePage(page) {
@@ -92,10 +105,23 @@ export default {
         this.currentPage = page;
       }
     },
-    formatDate(dateString) {
-      if (!dateString) return '미정';
-      const date = new Date(dateString);
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    formatSalary(salary) {
+      if (!salary) return '미정';
+      return salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원';
+    },
+    handleSearch() {
+      if (this.searchQuery.trim() === '') {
+        this.filteredJobs = [...this.jobs];
+      } else {
+        const query = this.searchQuery.toLowerCase();
+        this.filteredJobs = this.jobs.filter(job => 
+          job.jobInfoTitle.toLowerCase().includes(query) ||
+          job.jobCompanyName.toLowerCase().includes(query) ||
+          job.jobLocation.toLowerCase().includes(query) ||
+          job.jobWageType.toLowerCase().includes(query)
+        );
+      }
+      this.currentPage = 1;
     }
   }
 };
@@ -148,5 +174,9 @@ export default {
 .btn-primary:hover {
   background-color: #4f5fbe;
   border-color: #4f5fbe;
+}
+
+.input-group {
+  margin-bottom: 2rem;
 }
 </style>

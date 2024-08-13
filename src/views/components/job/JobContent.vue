@@ -13,6 +13,17 @@
           </div>
         </div>
         
+        <div class="row justify-content-center mt-4 mb-5">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="검색어를 입력하세요" v-model="searchQuery" @input="handleSearch">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="handleSearch">검색</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div class="row row-grid mt-5">
           <div class="col-lg-3 col-md-6 mb-4" v-for="job in paginatedJobs" :key="job.jobId">
             <div class="card shadow border-0 h-100">
@@ -60,18 +71,20 @@ export default {
   data() {
     return {
       jobs: [],
+      filteredJobs: [],
       currentPage: 1,
-      itemsPerPage: 16
+      itemsPerPage: 16,
+      searchQuery: ''
     };
   },
   computed: {
     paginatedJobs() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.jobs.slice(start, end);
+      return this.filteredJobs.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.jobs.length / this.itemsPerPage);
+      return Math.ceil(this.filteredJobs.length / this.itemsPerPage);
     }
   },
   mounted() {
@@ -82,6 +95,7 @@ export default {
       try {
         const response = await axios.get('http://localhost:8083/api/jobs');
         this.jobs = response.data;
+        this.filteredJobs = [...this.jobs];
       } catch (error) {
         console.error('Error fetching job data:', error);
       }
@@ -94,6 +108,20 @@ export default {
     formatSalary(salary) {
       if (!salary) return '미정';
       return salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원';
+    },
+    handleSearch() {
+      if (this.searchQuery.trim() === '') {
+        this.filteredJobs = [...this.jobs];
+      } else {
+        const query = this.searchQuery.toLowerCase();
+        this.filteredJobs = this.jobs.filter(job => 
+          job.jobInfoTitle.toLowerCase().includes(query) ||
+          job.jobCompanyName.toLowerCase().includes(query) ||
+          job.jobLocation.toLowerCase().includes(query) ||
+          job.jobWageType.toLowerCase().includes(query)
+        );
+      }
+      this.currentPage = 1;
     }
   }
 };
@@ -146,5 +174,9 @@ export default {
 .btn-primary:hover {
   background-color: #4f5fbe;
   border-color: #4f5fbe;
+}
+
+.input-group {
+  margin-bottom: 2rem;
 }
 </style>
