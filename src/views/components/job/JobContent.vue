@@ -1,101 +1,150 @@
 <template>
-    <div>
-      <section class="section section-shaped my-0 overflow-hidden">
-        <div class="container pt-lg pb-300">
-          <div class="row text-center justify-content-center">
-            <div class="col-lg-10">
-              <badge pill type="primary" class="my-4">New Topic</badge>
-  
-              <h2 class="display-3 text-gray mb-4">취업 게시판인데 여기다가 뭘쓰지?</h2>
-              <p class="lead text-gray">
-                새로 올라온 취업 정보를 보여줍니다. 부트스태랩에 있는 형태대로 쓰려고 했습니다만, 우와 폰트 짱귀여워
-                <br />
-                여기는 취업 관련 내용이 올라오는 곳이라고 소개글을 작성해야지. 그래서 뭔가 깔쌈하게 정리된 취업정보를 볼 수 있는 화면으로 만들어야지.
-              </p>
-            </div>
+  <div>
+    <section class="section section-shaped my-0 overflow-hidden">
+      <div class="container pt-lg pb-300">
+        <div class="row text-center justify-content-center">
+          <div class="col-lg-10">
+            <badge pill type="primary" class="my-4">New Topic</badge>
+            <h2 class="display-3 text-gray mb-4">취업 게시판</h2>
+            <p class="lead text-gray">
+              새로 올라온 취업 정보를 보여줍니다. 여기에서 다양한 회사의 채용 정보를 확인할 수 있습니다.
+              최신 취업 트렌드와 기회를 놓치지 마세요!
+            </p>
           </div>
-  
-          <div class="row row-grid mt-5">
-            <div class="col-lg-4" v-for="job in jobs" :key="job.jobId">
-              <div class="card shadow border-0 mb-4">
-                <div class="card-body py-5" style="min-height: 620px;">
-                  <div class="icon icon-shape icon-shape-primary rounded-circle mb-4">
-                    <icon name="ni ni-settings" size="lg" gradient="white" shadow round color="primary"></icon>
-                  </div>
-                  <h5 class="text-gray mt-3">{{ job.jobInfoTitle }}</h5>
-                  <ul class="list-unstyled mt-3 mb-0">
-                    <li><strong>Company:</strong> {{ job.jobCompanyName }}</li>
-                    <li><strong>Location:</strong> {{ job.jobLocation }}</li>
-                    <li><strong>Wage Type:</strong> {{ job.jobWageType }}</li>
-                    <li><strong>Salary:</strong> {{ job.jobSalary }}</li>
-                    <li><strong>Web Info:</strong> <a :href="job.jobWebInfoUrl" target="_blank">{{ job.jobWebInfoUrl }}</a></li>
-                    <li><strong>Mobile Info:</strong> <a :href="job.jobMobileInfoUrl" target="_blank">{{ job.jobMobileInfoUrl }}</a></li>
-                  </ul>
+        </div>
+        
+        <div class="row row-grid mt-5">
+          <div class="col-lg-3 col-md-6 mb-4" v-for="job in paginatedJobs" :key="job.jobId">
+            <div class="card shadow border-0 h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="icon icon-shape icon-shape-primary rounded-circle mb-4">
+                  <icon name="ni ni-briefcase-24" size="lg" gradient="white" shadow round color="primary"></icon>
                 </div>
+                <h5 class="text-primary font-weight-bold mb-3">{{ job.jobInfoTitle }}</h5>
+                <div class="text-gray flex-grow-1">
+                  <p class="mb-0"><strong>회사:</strong> {{ job.jobCompanyName }}</p>
+                  <p class="mb-0"><strong>위치:</strong> {{ job.jobLocation }}</p>
+                  <p class="mb-0"><strong>급여 유형:</strong> {{ job.jobWageType }}</p>
+                  <p class="mb-0"><strong>급여:</strong> {{ formatSalary(job.jobSalary) }}</p>
+                </div>
+                <a :href="job.jobWebInfoUrl" target="_blank" class="btn btn-primary btn-sm mt-3">상세 정보</a>
               </div>
             </div>
-    
-
           </div>
-
-          
-
         </div>
-      </section>
+        
+        <div class="row justify-content-center mt-4">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">이전</a>
+              </li>
+              <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage === page }">
+                <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+              </li>
+              <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">다음</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
 
-    </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        jobs: [], // Job 데이터를 저장할 배열
-      };
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      jobs: [],
+      currentPage: 1,
+      itemsPerPage: 16
+    };
+  },
+  computed: {
+    paginatedJobs() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.jobs.slice(start, end);
     },
-    mounted() {
-      this.fetchJobs(); // 컴포넌트가 마운트되면 데이터를 가져옵니다
+    totalPages() {
+      return Math.ceil(this.jobs.length / this.itemsPerPage);
+    }
+  },
+  mounted() {
+    this.fetchJobs();
+  },
+  methods: {
+    async fetchJobs() {
+      try {
+        const response = await axios.get('http://localhost:8083/api/jobs');
+        this.jobs = response.data;
+      } catch (error) {
+        console.error('Error fetching job data:', error);
+      }
     },
-    methods: {
-      async fetchJobs() {
-        try {
-          const response = await axios.get('http://localhost:8083/api/jobs');
-          this.jobs = response.data; // API로부터 받은 JobEntity 데이터를 저장합니다
-        } catch (error) {
-          console.error('Error fetching job data:', error);
-        }
-      },
+    changePage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  .text-gray {
-    color: #6c757d !important;
+    formatSalary(salary) {
+      if (!salary) return '미정';
+      return salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원';
+    }
   }
-  
-  .card {
-    border-radius: 0.75rem;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .card:hover {
-    transform: translateY(-10px);
-  }
-  
-  .icon-shape-primary {
-    background-color: #5e72e4;
-    color: white;
-  }
-  
-  .icon-shape {
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  </style>
-  
+};
+</script>
+
+<style scoped>
+.card {
+  border-radius: 0.75rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.icon-shape-primary {
+  background-color: #5e72e4;
+  color: white;
+}
+
+.icon-shape {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination {
+  justify-content: center;
+}
+
+.text-primary {
+  color: #5e72e4 !important;
+}
+
+.text-gray {
+  color: #6c757d !important;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.btn-primary {
+  background-color: #5e72e4;
+  border-color: #5e72e4;
+}
+
+.btn-primary:hover {
+  background-color: #4f5fbe;
+  border-color: #4f5fbe;
+}
+</style>
