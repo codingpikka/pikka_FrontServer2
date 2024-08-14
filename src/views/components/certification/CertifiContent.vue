@@ -7,8 +7,8 @@
               <badge pill type="primary" class="my-4">New Topic</badge>
               <h2 class="display-3 text-gray mb-4">자격증 게시판</h2>
               <p class="lead text-gray">
-                새로 올라온 취업 정보를 보여줍니다. 여기에서 다양한 회사의 채용 정보를 확인할 수 있습니다.
-                최신 취업 트렌드와 기회를 놓치지 마세요!
+                서울시 잡카페 정보를 보여줍니다. 취업 서비스와 스터디카페 등 양질의 취업정보를 제공하는 잡카페 리스트를 확인하세요!
+                코딩피카는 여러분들의 꿈을 응원합니다.
               </p>
             </div>
           </div>

@@ -15,8 +15,8 @@
             </router-link>
 
             <div class="nav-links">
-              <router-link to="/job" class="nav-link">취업</router-link>
-              <router-link to="/certification" class="nav-link">자격증</router-link>
+              <router-link to="/job" class="nav-link">채용</router-link>
+              <router-link to="/certification" class="nav-link">잡카페</router-link>
               <router-link to="/post" class="nav-link">게시판</router-link>
             </div>
           </div>

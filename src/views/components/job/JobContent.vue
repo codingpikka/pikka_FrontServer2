@@ -7,7 +7,7 @@
             <badge pill type="primary" class="my-4">New Topic</badge>
             <h2 class="display-3 text-gray mb-4">취업 게시판</h2>
             <p class="lead text-gray">
-              새로 올라온 취업 정보를 보여줍니다. 여기에서 다양한 회사의 채용 정보를 확인할 수 있습니다.
+              서울시 일자리센터 채용 정보를 보여줍니다. 여기에서 다양한 회사의 채용 정보를 확인할 수 있습니다.
               최신 취업 트렌드와 기회를 놓치지 마세요!
             </p>
           </div>
