@@ -80,6 +80,7 @@ export default {
     return {
       selectedCategory: "",
       form: {
+        id: null,
         title: "",
         content: "",
       },
@@ -88,8 +89,11 @@ export default {
     };
   },
   methods: {
-    selectCategory(category) {
+    async selectCategory(category) {
       this.selectedCategory = category;
+      if (this.form.id) {  // 기존 문의 수정 시
+        await this.updateInquiry();
+      }
     },
     getButtonStyle(category) {
       const isSelected = this.selectedCategory === category;
@@ -123,9 +127,9 @@ export default {
         userName: "홍길동", // 예시로 사용자 이름을 하드코딩
         userTitle: this.form.title,
         contactType: this.selectedCategory,
-        contactTitle: this.form.title, // 제목 추가
+        contactTitle: this.form.title,
         contactContents: this.form.content,
-        contactPostedDate: new Date().toISOString().split("T")[0], // 현재 날짜
+        contactPostedDate: new Date().toISOString().split("T")[0],
         adminId: 2, // 예시로 관리자 ID를 하드코딩
         adminName: "관리자", // 예시로 관리자 이름을 하드코딩
         responseTitle: "",
@@ -136,21 +140,43 @@ export default {
       };
 
       try {
-        const response = await axios.post("http://localhost:8083/inquiry", newData);
-        // 성공 시 alert 메시지 표시
-        alert("작성 완료!");
+        let response;
+        if (this.form.id) {
+          response = await axios.put(`http://localhost:8083/inquiry/${this.form.id}`, newData);
+        } else {
+          response = await axios.post("http://localhost:8083/inquiry", newData);
+        }
+        alert(this.form.id ? "수정 완료!" : "작성 완료!");
+        this.$emit('inquiry-updated', response.data);
         this.$router.push("/history");
         this.resetForm();
       } catch (error) {
-        // 오류 시 alert 메시지 표시
-        alert("작성 실패! 다시 입력해주세요!");
+        alert(this.form.id ? "수정 실패!" : "작성 실패! 다시 입력해주세요!");
         console.error("제출 오류:", error.response ? error.response.data : error.message);
+      }
+    },
+    async updateInquiry() {
+      try {
+        const response = await axios.put(`http://localhost:8083/inquiry/${this.form.id}`, {
+          contactType: this.selectedCategory,
+          userTitle: this.form.title,
+          contactContents: this.form.content,
+        });
+        if (response.data) {
+          console.log('문의 업데이트 성공:', response.data);
+          // 필요한 경우 로컬 상태 업데이트
+        }
+      } catch (error) {
+        console.error('문의 업데이트 실패:', error);
+        alert('문의 업데이트에 실패했습니다. 다시 시도해주세요.');
       }
     },
     resetForm() {
       this.form = {
+        id: null,
         title: "",
         content: "",
+        contactType:""
       };
       this.selectedCategory = "";
     },
