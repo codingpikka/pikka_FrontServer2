@@ -110,7 +110,7 @@
               </form>
             </template>
 
-            <!-- 메인 폼 및 데이터 표시 -->
+            <!-- 데이터 등록 시 데이터 표시 -->
             <template v-else>
               <form role="form" @submit.prevent>
                 <div class="header-buttons">
@@ -155,7 +155,7 @@
                     </div>
                   </div>
 
-                  <!-- 페이지네이션 -->
+                  <!-- 작성내역 페이지네이션 -->
                   <div class="pagination">
                     <button 
                       @click="changePage(currentPage - 1)" 
@@ -201,7 +201,7 @@
                     </div>
                   </div>
 
-                  <!-- 페이지네이션 -->
+                  <!-- 문의내역 페이지네이션 -->
                   <div class="pagination">
                     <button 
                       @click="changeInquiryPage(currentInquiryPage - 1)" 
@@ -238,9 +238,9 @@ export default {
       inquiryItems: [],
       activeButton: '작성내역',
       isEditing: false,
-      isEditingInquiry: false, // 추가
+      isEditingInquiry: false,
       currentPost: null,
-      currentInquiry: null, // 추가
+      currentInquiry: null,
       selectedCategory: "",
       editForm: {
         title: '',
@@ -248,18 +248,18 @@ export default {
         content: ''
       },
       inquiryEditForm: {
-        contactId: '',         // 'contactId' 사용
-        userTitle: '',         // 필드 이름 수정
-        contactType: '',       // 필드 이름 맞춤
-        contactContents: '',   // 추가
-        contactPostedDate: '', // 추가
-        adminId: '',           // 추가
-        adminName: '',         // 추가
-        responseTitle: '',     // 추가
-        responseContents: '',  // 추가
-        responsePostedDate: '',// 추가
-        responseStatus: '',    // 추가
-        answerContent: ''      // 추가
+        contactId: '',         
+        userTitle: '',       
+        contactType: '',       
+        contactContents: '',   
+        contactPostedDate: '', 
+        adminId: '',           
+        adminName: '',         
+        responseTitle: '',     
+        responseContents: '',  
+        responsePostedDate: '',
+        responseStatus: '',    
+        answerContent: ''      
       },
       currentPage: 1,
       itemsPerPage: 5,
@@ -385,8 +385,9 @@ export default {
       }
       return baseStyle;
     },
-    async updateInquiry() {
+    async updateInquiry(inquiry, newCategory) {
       try {
+        inquiry.contactType = newCategory;
         await axios.put(`http://localhost:8083/inquiry/${this.inquiryEditForm.contactId}`, this.inquiryEditForm);
         alert('문의 내역이 성공적으로 수정되었습니다.');
         this.isEditingInquiry = false;

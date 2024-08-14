@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     async submitData() {
-      // 폼 데이터 유효성 검사
+      // 데이터 유효성 검사
       if (!this.form.title || !this.form.thumbnail || !this.form.content) {
         alert('빈 값을 입력할 수 없습니다. 다시 입력해주세요!');
         return;
@@ -129,5 +129,4 @@ export default {
 </script>
 
 <style>
-/* 스타일을 여기에 추가하세요. */
 </style>
