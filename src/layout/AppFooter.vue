@@ -47,8 +47,8 @@ export default {
 
 <style scoped>
 .footer {
-  background-image: linear-gradient( 135deg, #C2FFD8 10%, #465EFB 100%);
-  color: #febe98;
+  background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+  color: black;
   width: 100%;
   padding: 2rem 0;
   margin-top: 50px;
@@ -59,19 +59,21 @@ export default {
 .footer .col-md-2,
 .footer .col-md-3,
 .footer .col-md-4 {
+  color: black;
   padding: 0.5rem;
 }
 .footer a {
-  color: #febe98;
+  color: black;
   text-decoration: none;
 }
 .footer a:hover {
-  color: #e1a77c;
+  color: black;
   text-decoration: underline;
 }
 .footer .fab,
 .footer .fas {
   font-size: 1.25rem;
+  color: black;
 }
 .footer p,
 .footer h5 {
@@ -79,14 +81,14 @@ export default {
 }
 .text-uppercase1 {
   font-family: 'PuradakGentleGothicR', sans-serif;
-  color: #febe98;
+  color: black;
   font-size: 36px;
   margin: 0.5rem 0;
 }
 .text-uppercase {
   font-family: 'LINESeedKR-Bd', sans-serif;
   font-size: 18px;
-  color: #fd8e4c;
+  color: black;
 }
 .text-light {
   font-family: 'LINESeedKR-Bd', sans-serif;
@@ -94,12 +96,13 @@ export default {
 }
 .list-unstyled {
   font-family: 'LINESeedKR-Bd', sans-serif;
+  color: black;
   font-size: 14px;
 }
 .mb-0 {
   font-family: 'LINESeedKR-Bd', sans-serif;
   font-size: 12px;
-  color: #999;
+  color: black;
 }
 .social-icon {
   width: 35px;
