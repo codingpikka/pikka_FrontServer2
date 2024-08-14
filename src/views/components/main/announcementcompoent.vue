@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row row-grid align-items-center">
         <div class="col-md-6 order-md-2" style="margin-bottom: 10%;">
-          <img src="../../../../public/img/brand/002501.png" class="img-fluid floating" />
+          <img src="https://i.namu.wiki/i/9Kovb-uaXq2cA7JxnbcVGDk4QCXZbMk-h7grHrg_7-o7gJE4azaEdJNYnBm56ubvqq4pPiqF7KNRmWheg9Wxmw.webp" class="img-fluid floating" />
         </div>
         <div class="col-md-6 order-md-1">
           <h3>공지사항</h3>
