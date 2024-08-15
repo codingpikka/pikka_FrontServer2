@@ -1,5 +1,6 @@
 <template>
   <div style="margin: 5% 10%;">
+    <h1 style="text-align: center;">오늘의 취업 정보🎁</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div
         class="col"
@@ -9,7 +10,7 @@
       >
         <div class="card h-100">
           <img
-            src="../../../../public/img/brand/mang.png"
+            src="../../../../public/img/brand/mainimg.png"
             class="card-img-top"
             alt="Job Image"
           />

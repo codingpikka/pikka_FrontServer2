@@ -1,5 +1,5 @@
 <template>
-  <div style="background-image: linear-gradient(-225deg, #FFFEFF 0%, #D7FFFE 100%);">
+  <div>
     <div class="container">
       <div class="row row-grid align-items-center">
         <div class="col-md-6 order-md-2" style="margin-bottom: 10%;">
@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     sortedLimitedNotices() {
-      return [...this.notices] // 이 부분이 변경되었습니다
+      return [...this.notices] 
         .sort((a, b) => new Date(b.notiCreateAt) - new Date(a.notiCreateAt))
         .slice(0, 2);
     }
